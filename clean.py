@@ -161,24 +161,42 @@ if __name__ == '__main__':
     path = input('Enter a directory path: ')
     path = return_path(path)
     start_time = time()
-    duplicat = []
-    for i in range(5):
-        W1 = Thread(target=find_duplicate, args=(path,))
-        W1.start()
-        duplicat.append(W1)
-        [W1.join() for W1 in duplicat]
-        print(W1)
-    # if duplicate_files:
-    #     rename_duplicate(duplicate_files)
-    # normalize_files_names(path)
-    # arrays_filling(path)
-    # files_extension = arrays_filling(path)[0]
-    # is_files = arrays_filling(path)[3]
+    duplicate_files = find_duplicate(path)
+    if duplicate_files:
+        rename_duplicate(duplicate_files)
+    normalize_files_names(path)
+    arrays_filling(path)
+    files_extension = arrays_filling(path)[0]
+    is_files = arrays_filling(path)[3]
     # making_dir(path, files_extension)
+    threads1 = []
+    for i in range(5):
+        th1 = Thread(target=making_dir, args=(path, files_extension,))
+        th1.start()
+        threads1.append(th1)
+        [th1.join() for th1 in threads1]
     # replace_known_files(path)
+    threads2 = []
+    for i in range(5):
+        th2 = Thread(target=replace_known_files, args=(path, ))
+        th2.start()
+        threads2.append(th2)
+        [th2.join() for th2 in threads2]
     # replace_unknown_files(path, is_files)
+    threads3 = []
+    for i in range(5):
+        th3 = Thread(target=replace_unknown_files, args=(path, is_files,))
+        th3.start()
+        threads3.append(th3)
+        [th3.join() for th3 in threads3]
     # unpacking_archives(path)
-    # remove_directories(path)
-    # end_time = time()
-    # print(end_time - start_time)
+    threads4 = []
+    for i in range(5):
+        th4 = Thread(target=unpacking_archives, args=(path,))
+        th4.start()
+        threads4.append(th4)
+        [th4.join() for th4 in threads4]
+    remove_directories(path)
+    end_time = time()
+    print(end_time - start_time)
     print('Everything is cleaned!')
